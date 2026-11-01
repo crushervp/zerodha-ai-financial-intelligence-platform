@@ -1,0 +1,5 @@
+﻿"news_id,symbol,sector,headline,summary,source,published_at,impact_tag"
+"news_01,INFY,Information Technology,""IT Guidance Downgraded Across Major US Clients"",""Weak global tech spending prompts conservative quarterly revenue outlook."",Moneycontrol,2026-10-30T18:00:00Z,NEGATIVE"
+"news_02,RELIANCE,Energy,""Refinery Margins Hit Multi-Month Highs"",""Global crude spreads widen, driving strong domestic downstream profitability."",Livemint,2026-10-31T07:30:00Z,POSITIVE"
+"news_03,SUZLON,Energy,""Grid Curtailment Notice Issued for High Wind Regions"",""Regulatory caps on peak feeder injection create near-term revenue friction."",ET Energy,2026-10-29T14:15:00Z,NEGATIVE"
+"news_04,HDFCBANK,Financial Services,""Credit Growth Accelerates in Retail and SME Segments"",""Q2 credit growth shows double-digit expansion with stable NPA ratios."",Economic Times,2026-10-31T08:00:00Z,POSITIVE"
