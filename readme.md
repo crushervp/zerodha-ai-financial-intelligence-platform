@@ -13,6 +13,7 @@ A governed, explainable financial portfolio intelligence and risk analytics plat
 ---
 
 ## 2. Directory Scaffold
+
 ├── backend/
 │   ├── analytics/           # Deterministic math engine (HHI, Beta, Drawdown, Exposure)
 │   ├── database/            # Pydantic schemas and SQL migrations
