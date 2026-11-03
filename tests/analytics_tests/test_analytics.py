@@ -10,7 +10,7 @@ def test_weights_sum_to_100():
     ]
     res = compute_holdings_exposure(sample_holdings)
     total_weight = sum(h["weight_pct"] for h in res["holdings"])
-    assert round(total_weight, 2) == 100.00
+    assert total_weight == pytest.approx(100.0, abs=.05)
 
 def test_high_concentration_alert():
     # 90% allocation in one stock

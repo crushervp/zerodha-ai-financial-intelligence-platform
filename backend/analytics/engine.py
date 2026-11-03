@@ -16,15 +16,20 @@ def run_analytics_engine(payload: Dict[str, Any]) -> Dict[str, Any]:
     holdings_data = payload.get("holdings", [])
     historical_returns = payload.get("historical_returns", {})
     benchmark_name = payload.get("benchmark_symbol", "NIFTY 50")
+    timeframe = payload.get("timeframe", "1M")
 
-    # 1. Compute Holdings & P&L exposure
-    exposure = compute_holdings_exposure(holdings_data)
+    # Ensure historical_returns knows the timeframe as well
+    if isinstance(historical_returns, dict) and "timeframe" not in historical_returns:
+        historical_returns["timeframe"] = timeframe
+
+    # 1. Compute Holdings & P&L exposure with timeframe scaling
+    exposure = compute_holdings_exposure(holdings_data, timeframe=timeframe)
 
     # 2. Sector Distribution
     sector_results = compute_sector_distribution(exposure["holdings"])
 
-    # 3. Risk & Volatility Metrics
-    risk_results = evaluate_risk_metrics(exposure["holdings"], historical_returns)
+    # 3. Risk & Volatility Metrics with timeframe scaling
+    risk_results = evaluate_risk_metrics(exposure["holdings"], historical_returns, timeframe=timeframe)
     
     # Update sector concentration flag in risk alerts
     has_sector_breach = len(sector_results["overweighted_sectors"]) > 0
@@ -48,12 +53,17 @@ def run_analytics_engine(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "portfolio_id": portfolio_id,
+        "timeframe": timeframe,
         "as_of_timestamp": datetime.now(timezone.utc).isoformat(),
         "summary": {
             "total_invested": exposure["total_invested"],
             "total_current_value": exposure["total_current_value"],
             "total_unrealized_pnl": exposure["total_unrealized_pnl"],
             "total_pnl_pct": exposure["total_pnl_pct"],
+            "timeframe": exposure.get("timeframe", timeframe),
+            "timeframe_label": exposure.get("timeframe_label", f"{timeframe} Trailing"),
+            "timeframe_return_pct": exposure.get("timeframe_return_pct", exposure["total_pnl_pct"]),
+            "timeframe_pnl": exposure.get("timeframe_pnl", exposure["total_unrealized_pnl"]),
             "hhi_index": exposure["hhi_index"],
             "concentration_status": exposure["concentration_status"]
         },
@@ -67,7 +77,8 @@ def run_analytics_engine(payload: Dict[str, Any]) -> Dict[str, Any]:
         "risk_metrics": {
             "portfolio_beta": risk_results["portfolio_beta"],
             "annualized_volatility": risk_results["annualized_volatility"],
-            "max_drawdown": risk_results["max_drawdown"]
+            "max_drawdown": risk_results["max_drawdown"],
+            "timeframe": risk_results.get("timeframe", timeframe)
         },
         "benchmark_comparison": bench_results,
         "alert_flags": risk_results["alert_flags"]

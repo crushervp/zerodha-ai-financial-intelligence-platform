@@ -1,0 +1,57 @@
+{
+  "server_name": "zerodha-financial-mcp-server",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "get_portfolio_snapshot",
+      "description": "Fetches normalized portfolio holdings for an investor account without exposing PII.",
+      "parameters": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Identifier of the portfolio to inspect",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "fetch_market_data",
+      "description": "Retrieves live or cached market prices, day changes, and index performance.",
+      "parameters": {
+        "symbols": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of stock ticker symbols",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "fetch_news_signals",
+      "description": "Retrieves recent market news and corporate action context for given tickers or sectors.",
+      "parameters": {
+        "symbols": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of stock ticker symbols",
+          "required": false
+        },
+        "sector": {
+          "type": "string",
+          "description": "Target market sector",
+          "required": false
+        }
+      }
+    },
+    {
+      "name": "execute_risk_analytics",
+      "description": "Executes deterministic analytics (HHI concentration, volatility, beta, drawdown, benchmark comparison) on portfolio holdings.",
+      "parameters": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Target portfolio ID",
+          "required": true
+        }
+      }
+    }
+  ]
+}
