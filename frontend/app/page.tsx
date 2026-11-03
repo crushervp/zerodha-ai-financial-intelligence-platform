@@ -11,7 +11,7 @@ import { ZerodhaLoginModal } from '../components/ZerodhaLoginModal';
 import { PortfolioTrajectoryChart } from '../components/PortfolioTrajectoryChart';
 import { SectorDonutChart } from '../components/SectorDonutChart';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
 
 const SAMPLE_PORTFOLIOS = [
   { id: 'port_diversified_01', name: 'Balanced NIFTY Portfolio', desc: '5 large-cap stocks across 5 distinct sectors' },
