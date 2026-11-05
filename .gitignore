@@ -1,4 +1,6 @@
 # Dependencies
+tools/
+.node/
 node_modules/
 frontend/node_modules/
 env/
@@ -26,6 +28,7 @@ tests/**/__pycache__/
 
 # Environment Variables & Secrets (Keep .env.example)
 .env
+.zerodha_session.json
 .env.local
 .env.development.local
 .env.test.local

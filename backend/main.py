@@ -56,6 +56,7 @@ class ZerodhaLoginRequest(BaseModel):
     client_id: Optional[str] = "ZR1001"
     password: Optional[str] = None
     totp: Optional[str] = None
+    enctoken: Optional[str] = None
     api_key: Optional[str] = None
     access_token: Optional[str] = None
     request_token: Optional[str] = None
@@ -190,6 +191,7 @@ def zerodha_login(req: ZerodhaLoginRequest):
             client_id=req.client_id,
             password=req.password,
             totp=req.totp,
+            enctoken=req.enctoken,
             api_key=req.api_key,
             access_token=req.access_token,
             request_token=req.request_token,
@@ -209,12 +211,15 @@ def get_zerodha_session():
 def sync_zerodha_live_market():
     """Re-syncs active Zerodha holdings with live NSE real-time quotes."""
     global ZERODHA_SESSION
-    if not ZERODHA_SESSION.get("is_connected") or not ZERODHA_SESSION.get("holdings"):
+    if not ZERODHA_SESSION.get("is_connected"):
         raise HTTPException(status_code=400, detail="No active Zerodha portfolio connected")
     
-    updated = sync_holdings_with_live_market(ZERODHA_SESSION["holdings"])
-    ZERODHA_SESSION["holdings"] = updated
+    if ZERODHA_SESSION.get("holdings"):
+        updated = sync_holdings_with_live_market(ZERODHA_SESSION["holdings"])
+        ZERODHA_SESSION["holdings"] = updated
     ZERODHA_SESSION["live_market_synced"] = True
+    from backend.services.zerodha_service import _save_session_cache
+    _save_session_cache()
     return {"status": "SUCCESS", "session": ZERODHA_SESSION}
 
 @app.post("/api/zerodha/upload-csv")
@@ -223,7 +228,8 @@ def upload_kite_csv(req: ZerodhaCsvUploadRequest):
     global ZERODHA_SESSION
     try:
         holdings = parse_kite_holdings_csv(req.csv_content)
-        ZERODHA_SESSION = {
+        ZERODHA_SESSION.clear()
+        ZERODHA_SESSION.update({
             "is_connected": True,
             "user_id": req.client_id or "KITE_CSV_USER",
             "user_name": f"Kite Investor ({req.client_id or 'Statement'})",
@@ -233,7 +239,9 @@ def upload_kite_csv(req: ZerodhaCsvUploadRequest):
             "connected_at": datetime.now(timezone.utc).isoformat(),
             "holdings": holdings,
             "live_market_synced": True
-        }
+        })
+        from backend.services.zerodha_service import _save_session_cache
+        _save_session_cache()
         return {"status": "SUCCESS", "session": ZERODHA_SESSION}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

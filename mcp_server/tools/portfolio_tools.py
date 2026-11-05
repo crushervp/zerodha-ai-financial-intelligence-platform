@@ -13,11 +13,12 @@ def get_portfolio_snapshot(portfolio_id: str) -> Dict[str, Any]:
     if portfolio_id == "port_user_zerodha":
         try:
             from backend.services.zerodha_service import ZERODHA_SESSION
-            if ZERODHA_SESSION.get("is_connected") and ZERODHA_SESSION.get("holdings"):
+            if ZERODHA_SESSION.get("is_connected"):
+                user_holdings = ZERODHA_SESSION.get("holdings") or []
                 return {
                     "portfolio_id": "port_user_zerodha",
-                    "holdings_count": len(ZERODHA_SESSION["holdings"]),
-                    "holdings": ZERODHA_SESSION["holdings"]
+                    "holdings_count": len(user_holdings),
+                    "holdings": user_holdings
                 }
         except ImportError:
             pass

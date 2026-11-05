@@ -81,3 +81,36 @@ def test_zerodha_logout():
     
     session_res = client.get("/api/zerodha/session")
     assert session_res.json()["is_connected"] is False
+
+def test_unrecognized_demo_id_raises_clear_error():
+    res = client.post("/api/zerodha/login", json={
+        "auth_type": "DEMO",
+        "client_id": "UNKNOWN_USER_123"
+    })
+    assert res.status_code == 400
+    assert "not a recognized demo account" in res.json()["detail"]
+
+def test_zerodha_console_csv_statement_upload():
+    console_csv = """Symbol,ISIN,Quantity Available,Quantity Discrepant,Average Price,Previous Closing Price
+HDFCBANK,INE040A01034,100,0,1450.00,1520.00
+ICICIBANK,INE090A01021,200,0,980.00,1050.00"""
+    res = client.post("/api/zerodha/upload-csv", json={
+        "csv_content": console_csv,
+        "client_id": "MY_CONSOLE_PORTFOLIO"
+    })
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "SUCCESS"
+    assert len(data["session"]["holdings"]) == 2
+    assert data["session"]["holdings"][0]["symbol"] == "HDFCBANK"
+
+def test_real_kite_web_login_validation():
+    # Attempt real login with dummy credentials without TOTP
+    res = client.post("/api/zerodha/login", json={
+        "auth_type": "KITE_WEB",
+        "client_id": "AB1234",
+        "password": "mysecretpassword"
+    })
+    # Should reject or fail with specific Zerodha error, not return mock portfolio
+    assert res.status_code == 400
+    assert ("TOTP" in res.json()["detail"] or "Zerodha" in res.json()["detail"] or "Invalid" in res.json()["detail"])
