@@ -102,3 +102,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `POST` | `/api/feedback` | Submits user helpfulness feedback |
 | `GET` | `/api/compliance/audit/{job_id}` | Returns complete compliance snapshots and tool logs |
 | `GET` | `/api/operations/metrics` | Telemetry endpoint for operational monitoring |
+
+---
+
+## 5. Production Deployment (AWS EC2)
+
+The application includes production-ready Docker containers and an Nginx reverse proxy.
+
+```bash
+# Launch on an AWS EC2 instance (Ubuntu 24.04):
+docker compose up -d --build
+```
+
+For complete step-by-step instructions on AWS instance creation, security group setup, and SSL, see the **[AWS EC2 Deployment Guide](DEPLOY_AWS.md)**.

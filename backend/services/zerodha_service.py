@@ -22,7 +22,10 @@ ZERODHA_SESSION: Dict[str, Any] = {
     "live_market_synced": False
 }
 
-SESSION_CACHE_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".zerodha_session.json"))
+SESSION_CACHE_FILE = os.getenv(
+    "ZERODHA_SESSION_CACHE_FILE",
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".zerodha_session.json"))
+)
 
 def _save_session_cache():
     try:

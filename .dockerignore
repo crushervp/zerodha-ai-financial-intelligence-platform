@@ -1,0 +1,13 @@
+.git
+.gitignore
+.env
+.zerodha_session.json
+env/
+tools/
+.pytest_cache/
+**/__pycache__
+frontend/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
