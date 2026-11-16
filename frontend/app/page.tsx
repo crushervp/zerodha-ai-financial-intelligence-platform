@@ -10,8 +10,7 @@ import { SectorAllocation } from '../components/SectorAllocation';
 import { ZerodhaLoginModal } from '../components/ZerodhaLoginModal';
 import { PortfolioTrajectoryChart } from '../components/PortfolioTrajectoryChart';
 import { SectorDonutChart } from '../components/SectorDonutChart';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+import { getApiBase } from '../lib/api';
 
 const SAMPLE_PORTFOLIOS = [
   { id: 'port_diversified_01', name: 'Balanced NIFTY Portfolio', desc: '5 large-cap stocks across 5 distinct sectors' },
@@ -44,7 +43,7 @@ export default function Dashboard() {
     setStatus('PENDING');
 
     try {
-      const res = await fetch(`${API_BASE}/api/portfolio-analysis`, {
+      const res = await fetch(`${getApiBase()}/api/portfolio-analysis`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ portfolio_id: targetPortId, timeframe: targetTf }),
@@ -54,7 +53,7 @@ export default function Dashboard() {
 
       // Poll until completed
       const pollInterval = setInterval(async () => {
-        const pollRes = await fetch(`${API_BASE}/api/insights/${data.job_id}`);
+        const pollRes = await fetch(`${getApiBase()}/api/insights/${data.job_id}`);
         const pollData = await pollRes.json();
         setStatus(pollData.status);
 
@@ -90,7 +89,7 @@ export default function Dashboard() {
 
     const checkInitialSession = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/zerodha/session`);
+        const res = await fetch(`${getApiBase()}/api/zerodha/session`);
         const data = await res.json();
         if (data.is_connected) {
           setZerodhaSession(data);
@@ -134,7 +133,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API_BASE}/api/zerodha/logout`, { method: 'POST' });
+      await fetch(`${getApiBase()}/api/zerodha/logout`, { method: 'POST' });
       setZerodhaSession(null);
       setPortfolioSource('SAMPLE');
       triggerAnalysis(selectedSamplePortfolio, timeframe);
@@ -146,7 +145,7 @@ export default function Dashboard() {
   const handleSyncLiveMarket = async () => {
     setSyncingMarket(true);
     try {
-      const res = await fetch(`${API_BASE}/api/zerodha/sync-live-market`, { method: 'POST' });
+      const res = await fetch(`${getApiBase()}/api/zerodha/sync-live-market`, { method: 'POST' });
       const data = await res.json();
       if (data.status === 'SUCCESS') {
         setZerodhaSession(data.session);
@@ -161,7 +160,7 @@ export default function Dashboard() {
 
   const handleFeedback = async (cardId: string, action: string) => {
     try {
-      await fetch(`${API_BASE}/api/feedback`, {
+      await fetch(`${getApiBase()}/api/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ card_id: cardId, user_action: action }),

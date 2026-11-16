@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+import { getApiBase } from '../lib/api';
 
 interface ZerodhaLoginModalProps {
   isOpen: boolean;
@@ -49,7 +48,7 @@ export const ZerodhaLoginModal: React.FC<ZerodhaLoginModalProps> = ({
         if (!enctoken.trim()) {
           throw new Error('Please paste your Zerodha Kite enctoken.');
         }
-        const res = await fetch(`${API_BASE}/api/zerodha/login`, {
+        const res = await fetch(`${getApiBase()}/api/zerodha/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -72,7 +71,7 @@ export const ZerodhaLoginModal: React.FC<ZerodhaLoginModalProps> = ({
           throw new Error('Please enter the 6-digit App 2FA TOTP code from your authenticator or Kite app.');
         }
 
-        const res = await fetch(`${API_BASE}/api/zerodha/login`, {
+        const res = await fetch(`${getApiBase()}/api/zerodha/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -98,7 +97,7 @@ export const ZerodhaLoginModal: React.FC<ZerodhaLoginModalProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/zerodha/login`, {
+      const res = await fetch(`${getApiBase()}/api/zerodha/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -129,7 +128,7 @@ export const ZerodhaLoginModal: React.FC<ZerodhaLoginModalProps> = ({
         payload.api_secret = apiSecret;
       }
 
-      const res = await fetch(`${API_BASE}/api/zerodha/login`, {
+      const res = await fetch(`${getApiBase()}/api/zerodha/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -163,7 +162,7 @@ export const ZerodhaLoginModal: React.FC<ZerodhaLoginModalProps> = ({
     setError(null);
     try {
       if (!csvContent.trim()) throw new Error('Please select or paste your Kite holdings CSV content.');
-      const res = await fetch(`${API_BASE}/api/zerodha/upload-csv`, {
+      const res = await fetch(`${getApiBase()}/api/zerodha/upload-csv`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

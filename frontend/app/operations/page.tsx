@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+import { getApiBase } from '../../lib/api';
 
 export default function OperationsConsole() {
   const [metrics, setMetrics] = useState<any>(null);
@@ -11,7 +10,7 @@ export default function OperationsConsole() {
 
   const fetchMetrics = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/operations/metrics`);
+      const res = await fetch(`${getApiBase()}/api/operations/metrics`);
       const data = await res.json();
       setMetrics(data);
     } catch (err) {
