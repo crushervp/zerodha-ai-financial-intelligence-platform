@@ -6,9 +6,11 @@ interface RecommendationCardProps {
   card: {
     card_id: string;
     category: 'EDUCATIONAL_INSIGHT' | 'RISK_ALERT' | 'RECOMMENDATION_PROMPT';
+    action_type?: string;
     title: string;
     summary: string;
     rationale: string;
+    action_steps?: string[];
     supporting_metrics: Record<string, any>;
     confidence: number;
     disclaimer: string;
@@ -21,10 +23,20 @@ export const InsightCard: React.FC<RecommendationCardProps> = ({ card, onFeedbac
   const [showRawJson, setShowRawJson] = useState(false);
   const [feedbackSent, setFeedbackSent] = useState<string | null>(null);
   const [showConfidenceTooltip, setShowConfidenceTooltip] = useState(false);
+  const [copiedAction, setCopiedAction] = useState(false);
 
   const handleAction = (action: string) => {
     setFeedbackSent(action);
     if (onFeedback) onFeedback(card.card_id, action);
+  };
+
+  const copyActionPlan = () => {
+    if (!card.action_steps || card.action_steps.length === 0) return;
+    const text = `${card.title}\n${card.summary}\n\nRecommended Action Steps:\n` +
+      card.action_steps.map((step, idx) => `${idx + 1}. ${step}`).join('\n');
+    navigator.clipboard.writeText(text);
+    setCopiedAction(true);
+    setTimeout(() => setCopiedAction(false), 2000);
   };
 
   const getCardStyle = () => {
@@ -33,17 +45,42 @@ export const InsightCard: React.FC<RecommendationCardProps> = ({ card, onFeedbac
         return {
           badge: 'bg-rose-50 text-rose-700 border-rose-200',
           borderLeft: 'border-l-4 border-l-rose-500',
+          actionHeader: 'text-rose-900',
+          actionStepBg: 'border-rose-100 hover:border-rose-200',
         };
       case 'RECOMMENDATION_PROMPT':
         return {
           badge: 'bg-amber-50 text-amber-700 border-amber-200',
           borderLeft: 'border-l-4 border-l-amber-500',
+          actionHeader: 'text-amber-900',
+          actionStepBg: 'border-amber-100 hover:border-amber-200',
         };
       default:
         return {
           badge: 'bg-blue-50 text-blue-700 border-blue-200',
           borderLeft: 'border-l-4 border-l-blue-500',
+          actionHeader: 'text-blue-900',
+          actionStepBg: 'border-blue-100 hover:border-blue-200',
         };
+    }
+  };
+
+  const getActionTypeLabel = (type?: string) => {
+    switch (type) {
+      case 'PORTFOLIO_REBALANCE':
+        return { label: '⚖️ Rebalance Strategy', style: 'bg-indigo-50 text-indigo-700 border-indigo-200' };
+      case 'PROFIT_BOOKING':
+        return { label: '💰 Profit Realization', style: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+      case 'RISK_DEFENSE':
+        return { label: '🛡️ Downside Defense', style: 'bg-rose-50 text-rose-700 border-rose-200' };
+      case 'DIVERSIFICATION':
+        return { label: '🌐 Diversification Plan', style: 'bg-purple-50 text-purple-700 border-purple-200' };
+      case 'TAX_LOSS_HARVESTING':
+        return { label: '📉 Tax-Loss Harvest', style: 'bg-amber-50 text-amber-700 border-amber-200' };
+      case 'SIP_STRATEGY':
+        return { label: '📈 Systematic Allocation', style: 'bg-teal-50 text-teal-700 border-teal-200' };
+      default:
+        return null;
     }
   };
 
@@ -61,16 +98,24 @@ export const InsightCard: React.FC<RecommendationCardProps> = ({ card, onFeedbac
   };
 
   const cardStyle = getCardStyle();
+  const actionTypeBadge = getActionTypeLabel(card.action_type);
   const confidencePct = Math.round(card.confidence * 100);
 
   return (
     <div
       className={`bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow mb-4 ${cardStyle.borderLeft}`}
     >
-      <div className="flex items-center justify-between mb-2.5">
-        <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${cardStyle.badge}`}>
-          {card.category.replace(/_/g, ' ')}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+        <div className="flex items-center gap-2">
+          <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${cardStyle.badge}`}>
+            {card.category.replace(/_/g, ' ')}
+          </span>
+          {actionTypeBadge && (
+            <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold border ${actionTypeBadge.style}`}>
+              {actionTypeBadge.label}
+            </span>
+          )}
+        </div>
 
         {/* Explainable Confidence Score with Derived Metric Tooltip */}
         <div className="relative">
@@ -100,6 +145,39 @@ export const InsightCard: React.FC<RecommendationCardProps> = ({ card, onFeedbac
 
       <h4 className="text-base font-bold text-slate-900 mb-1.5">{card.title}</h4>
       <p className="text-sm text-slate-600 mb-3.5 leading-relaxed">{card.summary}</p>
+
+      {/* Concrete Actionable Steps Checklist */}
+      {card.action_steps && card.action_steps.length > 0 && (
+        <div className="mt-2 mb-3.5 p-3.5 bg-slate-50/80 rounded-xl border border-slate-200">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+              <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[11px] shadow-2xs font-mono font-bold">
+                ⚡
+              </span>
+              <span className="uppercase tracking-wider text-[11px]">Recommended Action Steps</span>
+            </div>
+            <button
+              onClick={copyActionPlan}
+              className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold px-2 py-0.5 rounded hover:bg-blue-50 transition cursor-pointer"
+            >
+              {copiedAction ? '✓ Copied!' : '📋 Copy Actions'}
+            </button>
+          </div>
+          <ul className="space-y-2">
+            {card.action_steps.map((step, idx) => (
+              <li
+                key={idx}
+                className="text-xs text-slate-800 flex items-start gap-2.5 bg-white p-2.5 rounded-lg border border-slate-200/80 shadow-2xs"
+              >
+                <span className="w-4 h-4 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                  {idx + 1}
+                </span>
+                <span className="leading-relaxed font-medium">{step}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Expand/Collapse Rationale */}
       <button

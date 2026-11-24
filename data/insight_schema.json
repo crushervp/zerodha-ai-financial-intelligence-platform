@@ -49,9 +49,14 @@
             "type": "string",
             "enum": ["EDUCATIONAL_INSIGHT", "RISK_ALERT", "RECOMMENDATION_PROMPT"]
           },
+          "action_type": { "type": "string" },
           "title": { "type": "string" },
           "summary": { "type": "string" },
           "rationale": { "type": "string" },
+          "action_steps": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
           "supporting_metrics": { "type": "object" },
           "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
           "disclaimer": { "type": "string" }
