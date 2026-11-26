@@ -125,3 +125,11 @@ Vijay Kumar Edukula
 Sneha Kumbhar
 Abhishek Thakur
 Vidyadhar Patil
+
+## 🔗 Project Links
+
+[![GitHub](https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github)](YOUR_GITHUB_URL)
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Launch_App-28a745?style=for-the-badge&logo=vercel)](YOUR_LIVE_DEMO_URL)
+
+[![Video Demo](https://img.shields.io/badge/Video-Watch_Demo-FF0000?style=for-the-badge&logo=youtube)](YOUR_VIDEO_URL)
