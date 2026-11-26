@@ -117,11 +117,12 @@ docker compose up -d --build
 For complete step-by-step instructions on AWS instance creation, security group setup, and SSL, see the **[AWS EC2 Deployment Guide](DEPLOY_AWS.md)**.
 
 
-Team-
-Kasturi Dev Choudhury
-Kumar Somashekhar
-Joydeep Ghosh
-Vijay Kumar Edukula
-Sneha Kumbhar
-Abhishek Thakur
-Vidyadhar Patil
+## 👥 Team Members
+
+- Kasturi Dev Choudhury
+- Kumar Somashekhar
+- Joydeep Ghosh
+- Vijay Kumar Edukula
+- Sneha Kumbhar
+- Abhishek Thakur
+- Vidyadhar Patil
