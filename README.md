@@ -7,7 +7,7 @@
 [![Live Demo](https://img.shields.io/badge/Live_Demo-AWS_EC2-28a745?style=for-the-badge&logo=amazon-aws)](http://16.179.162.158)
 [![GitHub](https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github)](https://github.com/crushervp/zerodha-ai-financial-intelligence-platform)
 [![API Docs](https://img.shields.io/badge/FastAPI-Swagger_Docs-009688?style=for-the-badge&logo=fastapi&logoColor=white)](http://16.179.162.158/docs)
-[![Video Demo](https://img.shields.io/badge/Video-Watch_Demo-FF0000?style=for-the-badge&logo=youtube)](#11-live-demo--video-links)
+[![Video Demo](https://img.shields.io/badge/Video-Watch_Demo-FF0000?style=for-the-badge&logo=youtube)](https://drive.google.com/file/d/1f5j38ifoZcYMfid0bR-gd_kPsPPwRqYT/view?usp=sharing)
 
 ---
 
